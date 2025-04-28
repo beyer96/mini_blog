@@ -1,0 +1,1 @@
+Database name, username and password are `mini_blog_development`

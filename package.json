@@ -5,10 +5,14 @@
   "author": "Lukas Beyer <lukas.beyer@juicymo.cz>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --watch index.ts"
+    "dev": "nodemon --watch index.ts",
+    "db:migrate": "typeorm-ts-node-commonjs migration:run -d ./src/database/index.ts",
+    "db:rollback": "typeorm-ts-node-commonjs migration:revert -d ./src/database/index.ts"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.41.0",
     "express": "^5.1.0",
+    "glob": "^11.0.2",
     "pg": "^8.15.6",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.22"
