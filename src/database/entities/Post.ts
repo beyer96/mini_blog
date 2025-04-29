@@ -20,7 +20,9 @@ export default class Post extends BaseEntity {
   @Column()
   content: string;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   published_at: Date;
 
   @Column()

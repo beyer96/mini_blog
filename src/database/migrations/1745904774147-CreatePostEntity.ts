@@ -10,6 +10,8 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
           name: "id",
           type: "int",
           isPrimary: true,
+          isGenerated: true,
+          generationStrategy: "increment"
         },
         {
           name: "author_id",
@@ -42,6 +44,7 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
         {
           name: "updated_at",
           type: "timestamp",
+          default: "now()"
         }
       ]
     }));

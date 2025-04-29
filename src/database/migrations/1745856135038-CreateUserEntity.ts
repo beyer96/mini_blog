@@ -9,6 +9,8 @@ export class CreateUserEntity1745856135038 implements MigrationInterface {
           name: "id",
           type: "int",
           isPrimary: true,
+          isGenerated: true,
+          generationStrategy: "increment"
         },
         {
           name: "username",
@@ -33,6 +35,7 @@ export class CreateUserEntity1745856135038 implements MigrationInterface {
         {
           name: "updated_at",
           type: "timestamp",
+          default: "now()"
         }
       ]
     }))
