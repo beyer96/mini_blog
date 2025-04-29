@@ -15,7 +15,8 @@ export class CreateUserEntity1745856135038 implements MigrationInterface {
         {
           name: "username",
           type: "varchar",
-          isNullable: false
+          isNullable: false,
+          isUnique: true
         },
         {
           name: "password_hash",
@@ -25,7 +26,8 @@ export class CreateUserEntity1745856135038 implements MigrationInterface {
         {
           name: "email",
           type: "varchar",
-          isNullable: false
+          isNullable: false,
+          isUnique: true
         },
         {
           name: "created_at",
