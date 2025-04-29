@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import Post from "./Post";
 
 @Entity()
 export default class AppUser {
@@ -15,8 +16,11 @@ export default class AppUser {
   email: string;
 
   @Column()
-  created_at: number;
+  created_at: Date;
 
   @Column()
-  updated_at: number;
+  updated_at: Date;
+
+  @OneToMany(() => Post, post => post.author)
+  posts: Post[]
 }
