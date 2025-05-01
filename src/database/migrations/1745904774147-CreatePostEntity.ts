@@ -4,7 +4,7 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(new Table({
-      name: "posts",
+      name: "post",
       columns: [
         {
           name: "id",
@@ -49,7 +49,7 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
       ]
     }));
 
-    await queryRunner.createForeignKey("posts", new TableForeignKey({
+    await queryRunner.createForeignKey("post", new TableForeignKey({
       columnNames: ["author_id"],
       referencedColumnNames: ["id"],
       referencedTableName: "app_user",
