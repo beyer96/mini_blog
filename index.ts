@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { AppDataSource } from "./src/database";
 import authRouter from "./src/routes/auth";
+import usersRouter from "./src/routes/users";
 
 const PORT = 3000;
 const app = express();
@@ -24,5 +25,6 @@ app.get("/", (_, res) => {
 });
 
 app.use(authRouter);
+app.use(usersRouter);
 
 app.listen(PORT, () => console.log("Server is running..."));
