@@ -10,7 +10,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
   if (!validToken) throw new Error("Unauthorized");
 
   const user = await AppUser.findOneBy({ username: (jwt.decode(accessToken) as JwtPayload).username });
-  if (!user) throw new Error("Not found");
+  if (!user) throw new Error("User not found");
 
   const { password_hash, ...userInfo } = user;
   // @ts-ignore TODO - fix this issue - before I compile the code, it throws typescript error for some reason
