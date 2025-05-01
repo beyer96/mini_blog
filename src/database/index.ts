@@ -14,5 +14,6 @@ export const AppDataSource = new DataSource({
   username: process.env.APP_DB_USERNAME,
   password: process.env.APP_DB_PASSWORD,
   entities: [AppUser, Post],
-  migrations
+  migrations,
+  logging: true
 });
