@@ -8,6 +8,7 @@ export default class AppUser extends BaseEntity {
   async hashPassword() {
     const hashedPassword = await bcrypt.hash(this.password_hash, 10);
 
+    console.log(hashedPassword);
     hashedPassword && (this.password_hash = hashedPassword);
   }
 
