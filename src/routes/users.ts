@@ -1,10 +1,9 @@
 import { Router } from "express";
 import AppUser from "../database/entities/AppUser";
-import authenticate from "../middlewares/authenticate";
 
 const usersRouter = Router();
 
-usersRouter.get("/users/:id", authenticate, async (req, res) => {
+usersRouter.get("/users/:id", async (req, res) => {
   const { id } = req.params;
   const user = await AppUser.findOneBy({ id: +id });
   if (!user) {

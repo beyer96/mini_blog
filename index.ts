@@ -8,6 +8,8 @@ import morgan from "morgan";
 import { AppDataSource } from "./src/database";
 import authRouter from "./src/routes/auth";
 import usersRouter from "./src/routes/users";
+import postsRouter from "./src/routes/posts";
+import authenticate from "./src/middlewares/authenticate";
 
 const PORT = 3000;
 const app = express();
@@ -25,6 +27,10 @@ app.get("/", (_, res) => {
 });
 
 app.use(authRouter);
+
+app.use(authenticate);
+
 app.use(usersRouter);
+app.use(postsRouter);
 
 app.listen(PORT, () => console.log("Server is running..."));
