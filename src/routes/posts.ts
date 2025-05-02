@@ -35,4 +35,38 @@ postsRouter.get("/posts/:slug", async (req, res) => {
   }
 });
 
+postsRouter.route("/posts/:id")
+  .put(authenticate, async (req, res) => {
+    const id = +req.params.id;
+    const post = await Post.findOneBy({ id });
+    if (!post) {
+      res.status(404).send("Post not found");
+      return;
+    }
+
+    const { title, content, published_at } = req.body;
+
+    title && (post.title = title);
+    content && (post.content = content);
+    published_at && (post.published_at = published_at);
+
+    post.updated_at = new Date();
+
+    await post.save();
+
+    res.status(200).send({ post });
+  })
+  .delete(authenticate, async (req, res) => {
+    const id = +req.params.id;
+    const post = await Post.findOneBy({ id });
+    if (!post) {
+      res.status(404).send("Post not found");
+      return;
+    }
+
+    await post.remove();
+
+    res.status(204).send("Post was successfully removed.");
+  });
+
 export default postsRouter;
