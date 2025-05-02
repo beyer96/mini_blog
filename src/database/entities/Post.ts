@@ -6,7 +6,7 @@ import slugify from "slugify";
 export default class Post extends BaseEntity {
   @BeforeInsert()
   generateSlug = () => {
-    this.slug = slugify(this.title);
+    this.slug = slugify(this.title, { lower: true, remove: /[*+~.()'"!:@]/g });
   };
 
   @PrimaryGeneratedColumn()
