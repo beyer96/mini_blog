@@ -24,6 +24,10 @@ const REFRESH_TOKEN_COOKIE_OPTIONS = {
 const authRouter = Router();
 const redis = new Redis();
 
+export const isRevoked = async (token: string) => {
+  return await redis.get(token) == "revoked";
+}
+
 const generateAccessToken = (userInfo: UserInfo) => {
   const accessToken = jwt.sign(userInfo, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION_IN_SECONDS });
 
@@ -77,6 +81,7 @@ authRouter.post("/auth/refresh", async (req, res) => {
   try {
     const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
     if (!refreshToken) throw new Error("No refresh token available!");
+    if (await isRevoked(refreshToken)) throw new Error("Invalid token!");
 
     jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err: any, decoded: any) => {
       if (err) throw new Error(err.message);
@@ -97,17 +102,18 @@ authRouter.post("/auth/refresh", async (req, res) => {
 });
 
 authRouter.post("/auth/logout", async (req, res) => {
-  const accessToken = req.headers.authorization?.split(" ")[1];
   const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
   if (!refreshToken) {
     res.sendStatus(204);
     return;
   }
 
+  const accessToken = req.headers.authorization?.split(" ")[1];
+
   const revokeToken = (token: string) => {
     const tokenExp = (jwt.decode(token) as JwtPayload).exp;
-    
-    tokenExp && redis.setex(token, Math.round(tokenExp - Date.now() / 1000), "revoked");
+
+    tokenExp && tokenExp > Date.now() && redis.setex(token, Math.round(tokenExp - Date.now() / 1000), "revoked");
   }
 
   accessToken && revokeToken(accessToken);
