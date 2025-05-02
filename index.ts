@@ -1,5 +1,8 @@
 require("@dotenvx/dotenvx").config({ path: [".env", ".env.development"] });
 
+// https://github.com/TypeStrong/ts-node/issues/391#issuecomment-1015693982
+import "./src/types/express";
+
 import "reflect-metadata";
 import express from "express";
 import bodyParser from "body-parser";
