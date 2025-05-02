@@ -13,8 +13,7 @@ const authenticate = async (req: Request, res: Response, next: NextFunction) => 
   if (!user) throw new Error("User not found");
 
   const { password_hash, ...userInfo } = user;
-  // @ts-ignore TODO - fix this issue - before I compile the code, it throws typescript error for some reason
-  res.user = userInfo;
+  req.user = userInfo;
 
   next();
 };
