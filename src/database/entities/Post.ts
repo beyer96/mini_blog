@@ -1,8 +1,13 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import AppUser from "./AppUser";
+import slugify from "slugify";
 
 @Entity()
 export default class Post extends BaseEntity {
+  @BeforeInsert()
+  generateSlug = () => {
+    this.slug = slugify(this.title);
+  };
 
   @PrimaryGeneratedColumn()
   id: number;
