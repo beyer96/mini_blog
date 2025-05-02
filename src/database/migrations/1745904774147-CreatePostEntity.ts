@@ -34,7 +34,8 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
         },
         {
           name: "published_at",
-          type: "timestamp"
+          type: "timestamp",
+          isNullable: true
         },
         {
           name: "created_at",
@@ -58,6 +59,6 @@ export class CreatePostEntity1745904774147 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable("posts");
+    await queryRunner.dropTable("post");
   }
 }
