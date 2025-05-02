@@ -20,4 +20,19 @@ postsRouter.route("/posts")
     res.status(200).send({ newPost });
   });
 
+postsRouter.get("/posts/:slug", async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const post = await Post.findOneBy({ slug });
+    if (!post) {
+      res.status(404).send("Post not found");
+      return;
+    }
+
+    res.status(200).send({ post });
+  } catch (error) {
+    res.status(400).send("Something went wrong.");
+  }
+});
+
 export default postsRouter;
