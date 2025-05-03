@@ -2,15 +2,17 @@ import { Router } from "express";
 import Post from "../database/entities/Post";
 import authenticate from "../middlewares/authenticate";
 import NotFoundError from "../errors/NotFoundError";
+import { paginate } from "../utils";
 
 const postsRouter = Router();
 
 postsRouter.route("/posts")
   .get(async (req, res) => {
-    const posts = await Post.find();
+    const { limit, page } = req.query;
+    const [posts, postsCount] = await paginate(Post, Number(limit), Number(page));
     if (!posts.length) throw new NotFoundError({ message: "No posts found." });
 
-    res.status(200).send({ posts });
+    res.status(200).send({ posts, total: postsCount });
   })
   .post(authenticate, async (req, res) => {
     const { title, content, published_at } = req.body;
