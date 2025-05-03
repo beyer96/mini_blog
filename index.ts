@@ -12,6 +12,7 @@ import { AppDataSource } from "./src/database";
 import authRouter from "./src/routes/auth";
 import usersRouter from "./src/routes/users";
 import postsRouter from "./src/routes/posts";
+import errorHandler from "./src/middlewares/error-handler";
 
 const PORT = 3000;
 const app = express();
@@ -32,5 +33,7 @@ app.use(authRouter);
 
 app.use(usersRouter);
 app.use(postsRouter);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log("Server is running..."));
