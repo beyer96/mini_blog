@@ -9,7 +9,7 @@ const postsRouter = Router();
 postsRouter.route("/posts")
   .get(async (req, res) => {
     const { limit, page } = req.query;
-    const [posts, postsCount] = await paginate(Post, Number(limit), Number(page));
+    const [posts, postsCount] = await paginate(Post, Number(limit), Number(page), { relations: ["author"] });
     if (!posts.length) throw new NotFoundError({ message: "No posts found." });
 
     res.status(200).send({ posts, total: postsCount });

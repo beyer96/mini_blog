@@ -1,4 +1,4 @@
-import { BaseEntity } from "typeorm";
+import { BaseEntity, FindManyOptions } from "typeorm";
 
 export function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
@@ -19,7 +19,8 @@ export function getErrorMessage(error: unknown): string {
 export async function paginate<T extends BaseEntity>(
   entity: typeof BaseEntity & { new(): T },
   limit: number,
-  offset: number
+  offset: number,
+  queryOptions?: FindManyOptions
 ): Promise<[T[], count: number]> {
   const take = limit || 5
   const skip = take * (Math.max(offset - 1, 0));
@@ -27,5 +28,6 @@ export async function paginate<T extends BaseEntity>(
   return await entity.findAndCount({
     skip,
     take,
+    ...queryOptions
   });
 }
