@@ -8,7 +8,6 @@ export default class AppUser extends BaseEntity {
   async hashPassword() {
     const hashedPassword = await bcrypt.hash(this.password_hash, 10);
 
-    console.log(hashedPassword);
     hashedPassword && (this.password_hash = hashedPassword);
   }
 
@@ -24,10 +23,10 @@ export default class AppUser extends BaseEntity {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ default: "now()" })
   created_at: Date;
 
-  @Column()
+  @Column({ default: "now()" })
   updated_at: Date;
 
   @OneToMany(() => Post, post => post.author)

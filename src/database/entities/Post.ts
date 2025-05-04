@@ -26,14 +26,15 @@ export default class Post extends BaseEntity {
   content: string;
 
   @Column({
-    nullable: true
+    nullable: true,
+    default: "now()"
   })
   published_at: Date;
 
-  @Column()
+  @Column({ default: "now()" })
   created_at: Date;
 
-  @Column()
+  @Column({ default: "now()" })
   updated_at: Date;
 
 }
