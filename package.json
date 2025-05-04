@@ -8,7 +8,7 @@
     "dev": "nodemon index.ts",
     "db:migrate": "typeorm-ts-node-commonjs migration:run -d ./src/database/index.ts",
     "db:rollback": "typeorm-ts-node-commonjs migration:revert -d ./src/database/index.ts",
-    "db:seed": "APP_DB_QUERY_LOGGING=false yarn ts-node src/database/seeds/index.ts"
+    "db:seed": "yarn ts-node src/database/seeds/index.ts"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.41.0",
