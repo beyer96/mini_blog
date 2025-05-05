@@ -27,12 +27,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-app.get("/", (_, res) => {
-  res.send("Index");
-});
-
 app.use(authRouter);
-
 app.use(usersRouter);
 app.use(postsRouter);
 
