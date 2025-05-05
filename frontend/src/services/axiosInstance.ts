@@ -1,3 +1,4 @@
+// Based very much on https://www.youtube.com/watch?v=AcYF18oGn6Y
 import axios, { AxiosError } from "axios";
 import { LOCAL_STORAGE_ACCESS_TOKEN_NAME } from "../utils";
 import AuthService from "./authService";
@@ -22,7 +23,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config!;
 
     // @ts-expect-error custom _retry property
-    if (error.status === 401 && !originalRequest._retry) {
+    if (error.status === 403 && error.response?.data.message === "Unauthorized" && !originalRequest._retry) {
       try {
         const response = await AuthService.refresh();
 
@@ -39,6 +40,8 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_NAME);
       }
     }
+
+    return Promise.reject(error);
   }
 );
 

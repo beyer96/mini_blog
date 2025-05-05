@@ -5,6 +5,7 @@ import AppUser from "../database/entities/AppUser";
 import Redis from "ioredis";
 import AuthenticationError from "../errors/AuthenticationError";
 import authenticate from "../middlewares/authenticate";
+import AuthorizationError from "../errors/AuthorizationError";
 
 interface UserInfo {
   username: string;
@@ -77,11 +78,11 @@ authRouter.post("/auth/login", async (req, res) => {
 
 authRouter.post("/auth/refresh", async (req, res) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
-  if (!refreshToken) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!", statusCode: 400 });
-  if (await isRevoked(refreshToken)) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!", statusCode: 400 })
+  if (!refreshToken) throw new AuthorizationError({ message: "Unauthorized" });
+  if (await isRevoked(refreshToken)) throw new AuthorizationError({ message: "Unauthorized" })
 
   jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
-    if (err) throw new AuthenticationError({ message: "Unable to refresh access token: Invalid refresh token!" });
+    if (err) throw new AuthorizationError({ message: "Unauthorized" });
 
     const decodedUserInfo = { email: decoded.email, username: decoded.username };
     const accessToken = generateAccessToken(decodedUserInfo);
