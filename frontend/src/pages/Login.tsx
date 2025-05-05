@@ -1,22 +1,20 @@
 import { FormEvent } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router";
 import { LOCAL_STORAGE_ACCESS_TOKEN_NAME } from "../utils";
 import { login } from "../store/userSlice";
 import { useAppDispatch } from "../store";
+import AuthService from "../services/authService";
 
 export default function Login() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
-
     const formData = new FormData(e.target as HTMLFormElement);
-    const response = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/auth/login`, {
-      username: formData.get("username"),
-      password: formData.get("password")
+    const { user, accessToken } = await AuthService.login({
+      username: formData.get("username") as string,
+      password: formData.get("password") as string
     });
-    const { user, accessToken } = response.data;
 
     localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_NAME, accessToken);
     dispatch(login(user));

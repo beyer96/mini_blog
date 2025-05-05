@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import AppUser from "../database/entities/AppUser";
 import Redis from "ioredis";
 import AuthenticationError from "../errors/AuthenticationError";
+import authenticate from "../middlewares/authenticate";
 
 interface UserInfo {
   username: string;
@@ -17,7 +18,7 @@ const REFRESH_TOKEN_EXPIRATION_IN_SECONDS = 24 * 60 * 60; // 24 hours
 const REFRESH_TOKEN_COOKIE_NAME = "mini_blog_app_refresh_token";
 const REFRESH_TOKEN_COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   sameSite: "strict",
   maxAge: REFRESH_TOKEN_EXPIRATION_IN_SECONDS * 1000,
 } satisfies CookieOptions;
@@ -76,7 +77,8 @@ authRouter.post("/auth/login", async (req, res) => {
 
 authRouter.post("/auth/refresh", async (req, res) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
-  if (!refreshToken || await isRevoked(refreshToken)) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!" });
+  if (!refreshToken) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!", statusCode: 400 });
+  if (await isRevoked(refreshToken)) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!", statusCode: 400 })
 
   jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
     if (err) throw new AuthenticationError({ message: "Unable to refresh access token: Invalid refresh token!" });
@@ -114,6 +116,10 @@ authRouter.post("/auth/logout", async (req, res) => {
   res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
 
   res.sendStatus(204);
+});
+
+authRouter.get("/auth/session", authenticate, async (req, res) => {
+  res.status(200).send({ user: req.user });
 });
 
 export default authRouter;
