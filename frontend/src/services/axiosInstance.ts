@@ -23,15 +23,15 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config!;
 
     // @ts-expect-error custom _retry property
-    if (error.status === 403 && error.response?.data.message === "Unauthorized" && !originalRequest._retry) {
+    if (error.status === 403 && error.response?.data.error.message === "Unauthorized" && !originalRequest._retry) {
       try {
-        const response = await AuthService.refresh();
+        const { accessToken } = await AuthService.refresh();
 
-        if (response.data.accessToken) {
-          localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_NAME, response.data.accessToken);
+        if (accessToken) {
+          localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_NAME, accessToken);
         }
 
-        originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         // @ts-expect-error custom _retry property
         originalRequest._retry = true;
 
