@@ -78,11 +78,11 @@ authRouter.post("/auth/login", async (req, res) => {
 
 authRouter.post("/auth/refresh", async (req, res) => {
   const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
-  if (!refreshToken) throw new AuthorizationError({ message: "Unauthorized" });
-  if (await isRevoked(refreshToken)) throw new AuthorizationError({ message: "Unauthorized" })
+  if (!refreshToken) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!" });
+  if (await isRevoked(refreshToken)) throw new AuthenticationError({ message: "Unable to refresh access token: No refresh token available!" })
 
   jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
-    if (err) throw new AuthorizationError({ message: "Unauthorized" });
+    if (err) throw new AuthenticationError({ message: "Unable to refresh access token: Invalid refresh token!" });
 
     const decodedUserInfo = { email: decoded.email, username: decoded.username };
     const accessToken = generateAccessToken(decodedUserInfo);

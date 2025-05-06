@@ -3,6 +3,8 @@ import axios, { AxiosError } from "axios";
 import { LOCAL_STORAGE_ACCESS_TOKEN_NAME } from "../utils";
 import AuthService from "./authService";
 
+type ErrorResponse = { error: { message: string, statusCode: number }};
+
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
   withCredentials: true,
@@ -22,8 +24,7 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config!;
 
-    // @ts-expect-error custom _retry property
-    if (error.status === 403 && error.response?.data.error.message === "Unauthorized" && !originalRequest._retry) {
+    if (error.status === 403 && (error.response!.data as ErrorResponse).error.message === "Unauthorized") {
       try {
         const { accessToken } = await AuthService.refresh();
 
@@ -32,8 +33,6 @@ axiosInstance.interceptors.response.use(
         }
 
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        // @ts-expect-error custom _retry property
-        originalRequest._retry = true;
 
         return axiosInstance(originalRequest);
       } catch {

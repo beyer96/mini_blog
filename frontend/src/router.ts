@@ -7,9 +7,13 @@ const router = createBrowserRouter([
   {
     Component: DefaultLayout,
     loader: async () => {
-      const { user } = await AuthService.getUserSession();
+      try {
+        const { user } = await AuthService.getUserSession();
 
-      return { user };
+        return { user };
+      } catch {
+        return { user: undefined }
+      }
     },
     children: [
       {
