@@ -73,7 +73,7 @@ authRouter.post("/auth/login", async (req, res) => {
 
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
 
-  res.status(200).send({ user: userInfo, accessToken });
+  res.status(200).send({ user, accessToken });
 });
 
 authRouter.post("/auth/refresh", async (req, res) => {
