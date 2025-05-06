@@ -4,7 +4,7 @@ import AuthService from "../services/authService";
 import { logout } from "../store/userSlice";
 
 export default function Navigation() {
-  const user = useAppSelector(state => state.user.user);
+  const { user } = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
     const response = await AuthService.logout();
