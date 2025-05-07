@@ -18,16 +18,17 @@ export function getErrorMessage(error: unknown): string {
 
 export async function paginate<T extends BaseEntity>(
   entity: typeof BaseEntity & { new(): T },
-  limit: number,
-  offset: number,
+  limit: number | null,
+  offset: number | null,
   queryOptions?: FindManyOptions
-): Promise<[T[], count: number]> {
-  const take = limit || 5
-  const skip = take * (Math.max(offset - 1, 0));
-
-  return await entity.findAndCount({
+): Promise<[T[], total: number, limit: number, page: number]> {
+  const take = limit ?? 5;
+  const skip = take * Math.max((offset ?? 0) - 1, 0);
+  const [posts, postsCount] = await entity.findAndCount({
     skip,
     take,
     ...queryOptions
   });
+
+  return [ posts, postsCount, take, (skip + 1) ];
 }

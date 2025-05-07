@@ -8,11 +8,13 @@ const postsRouter = Router();
 
 postsRouter.route("/posts")
   .get(async (req, res) => {
-    const { limit, page } = req.query;
-    const [posts, postsCount] = await paginate(Post, Number(limit), Number(page), { relations: ["author"] });
+    const { limit: limitParam, page: pageParam } = req.query;
+    const limit = limitParam ? +limitParam : null;
+    const page = pageParam ? +pageParam : null;
+    const [posts, postsCount, currentLimit, currentPage] = await paginate(Post, limit, page, { relations: ["author"] });
     if (!posts.length) throw new NotFoundError({ message: "No posts found." });
 
-    res.status(200).send({ posts, total: postsCount });
+    res.status(200).send({ posts, total: postsCount, limit: currentLimit, page: currentPage });
   })
   .post(authenticate, async (req, res) => {
     const { title, content, published_at } = req.body;
