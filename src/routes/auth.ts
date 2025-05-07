@@ -56,7 +56,7 @@ authRouter.post("/auth/register", async (req, res) => {
 
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
 
-  res.status(200).send({ user: userInfo, accessToken });
+  res.status(200).send({ user: newUser, accessToken });
 });
 
 authRouter.post("/auth/login", async (req, res) => {
