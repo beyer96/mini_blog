@@ -6,7 +6,12 @@ export interface User {
   updated_at: Date;
 }
 
-export interface LoginResponse {
-  user: User;
-  accessToken: string;
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  slug: string;
+  created_at: Date;
+  updated_at: Date;
+  published_at: Date;
 }
