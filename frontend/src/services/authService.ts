@@ -1,32 +1,44 @@
 import axiosInstance from "./axiosInstance";
 import type { User } from "../types";
 
-type loginResponse = { user: User, accessToken: string };
-type refreshResponse = { accessToken: string };
-type logoutResponse = void;
-type getUserSessionResponse = { user: User };
+interface LoginBody { username?: User["username"], password?: string };
+interface LoginResponse { user: User, accessToken: string };
+interface LogoutResponse { status: number };
+interface RefreshResponse { accessToken: string };
+interface GetUserSessionResponse { user: User };
+interface RegisterResponse { user: User, accessToken: string };
+interface RegisterBody {
+  username?: User["username"],
+  password?: string,
+  email?: string,
+};
+
 
 export default class AuthService {
-  static login = async (
-    data: { username: User["username"], password: string }
-  ): Promise<loginResponse> => {
+  static login = async (data: LoginBody): Promise<LoginResponse> => {
     const response = await axiosInstance.post("/auth/login", data);
 
     return response.data;
   };
 
-  static refresh = async (): Promise<refreshResponse> => {
+  static refresh = async (): Promise<RefreshResponse> => {
     const response = await axiosInstance.post("/auth/refresh");
 
     return response.data;
   }
 
-  static logout = async (): Promise<logoutResponse> => {
+  static logout = async (): Promise<LogoutResponse> => {
     return await axiosInstance.post("/auth/logout");
   }
 
-  static getUserSession = async (): Promise<getUserSessionResponse> => {
+  static getUserSession = async (): Promise<GetUserSessionResponse> => {
     const response = await axiosInstance.get("/auth/session");
+
+    return response.data;
+  }
+
+  static register = async (data: RegisterBody): Promise<RegisterResponse> => {
+    const response = await axiosInstance.post("/auth/register", data);
 
     return response.data;
   }
