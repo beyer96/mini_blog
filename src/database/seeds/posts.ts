@@ -28,7 +28,7 @@ export default async function seedPosts(dataSource: DataSource) {
   
         const post = Post.create({
           title: faker.book.title(),
-          content: faker.commerce.productDescription(),
+          content: faker.lorem.paragraphs({ min: 3, max: 6 }),
           author: user
         });
 
