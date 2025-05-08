@@ -40,6 +40,20 @@ const router = createBrowserRouter([
         lazy: {
           Component: async () => (await import("./pages/Register")).default
         }
+      },
+      {
+        path: "/posts/:slug",
+        lazy: {
+          Component: async () => (await import("./pages/Post")).default
+        },
+        loader: async ({ params }) => {
+          const { slug } = params;
+          if (!slug) return;
+
+          const { post } = await PostService.getPost(slug);
+
+          return { post };
+        }
       }
     ]
   }

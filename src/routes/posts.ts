@@ -28,7 +28,7 @@ postsRouter.route("/posts")
 
 postsRouter.get("/posts/:slug", async (req, res) => {
   const { slug } = req.params;
-  const post = await Post.findOneBy({ slug });
+  const post = await Post.findOne({ where: { slug }, relations: ["author"]});
   if (!post) throw new NotFoundError({ message: "Post not found." });
 
   res.status(200).send({ post });

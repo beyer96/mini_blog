@@ -19,4 +19,10 @@ export default class PostService {
 
     return response.data;
   }
+
+  static getPost = async (slug: string): Promise<{ post: Post }> => {
+    const response = await axiosInstance.get(`/posts/${slug}`);
+
+    return response.data;
+  }
 }
