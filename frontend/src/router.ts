@@ -20,8 +20,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         Component: Home,
-        loader: async () => {
-          const { posts, total, limit, page } = await PostService.getPosts();
+        loader: async ({ request }) => {
+          const search = new URL(request.url).searchParams;
+          const pageParam = Number(search.get("page")) || 1;
+          const limitParam = Number(search.get("limit")) || 5;
+          const { posts, total, limit, page } = await PostService.getPosts({ page: pageParam, limit: limitParam });
 
           return { posts, total, limit, page };
         }
