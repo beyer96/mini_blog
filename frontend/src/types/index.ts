@@ -17,7 +17,7 @@ export interface Post {
 }
 
 export interface PaginationProps {
-  total: number;
-  limit: number;
-  page: number;
+  total?: number;
+  limit?: number;
+  page?: number;
 }
