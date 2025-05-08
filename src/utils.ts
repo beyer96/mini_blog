@@ -24,11 +24,12 @@ export async function paginate<T extends BaseEntity>(
 ): Promise<[T[], total: number, limit: number, page: number]> {
   const take = limit ?? 5;
   const skip = take * Math.max((offset ?? 0) - 1, 0);
+  const page = skip/take + 1;
   const [posts, postsCount] = await entity.findAndCount({
     skip,
     take,
     ...queryOptions
   });
 
-  return [ posts, postsCount, take, (skip + 1) ];
+  return [ posts, postsCount, take, page ];
 }
