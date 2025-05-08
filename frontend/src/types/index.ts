@@ -15,3 +15,9 @@ export interface Post {
   updated_at: Date;
   published_at: Date;
 }
+
+export interface PaginationProps {
+  total: number;
+  limit: number;
+  page: number;
+}
