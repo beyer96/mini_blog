@@ -30,7 +30,7 @@ export default function Pagination({ total, limit, page }: PaginationProps) {
                   pathname,
                   search: `?page=${page}&limit=${limit}`
                 }}
-                className={`flex justify-center items-center w-[40px] h-[40px] border-1 border-sky-400 rounded-md ${isSelected && "bg-sky-400 text-white"}`}
+                className={`flex justify-center items-center w-[40px] h-[40px] border-1 border-sky-400 rounded-md ${isSelected && "bg-sky-400 text-white"} hover:bg-sky-400`}
                 >
                 <span>{page}</span>
               </Link>
