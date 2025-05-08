@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import { Post as IPost } from "../types";
+import { useAppSelector } from "../store";
 
 export default function Post({ post }: { post: IPost}) {
+  const { user } = useAppSelector(store => store.user);
   const excerpt = (postContent: string, length = 80) => {
     return postContent.slice(0, length) + "...";
   };
@@ -14,7 +16,10 @@ export default function Post({ post }: { post: IPost}) {
         {excerpt(post.content)}
       </p>
       <span className="block my-5">Author: {post.author.username}</span>
-      <Link to={`/posts/${post.slug}`} className="p-3 border-1 border-sky-400 rounded-md hover:text-white hover:bg-sky-400">Read more</Link>
+      <div className="flex justify-between items-center">
+        <Link to={`/posts/${post.slug}`} className="p-3 border-1 border-sky-400 rounded-md hover:text-white hover:bg-sky-400">Read more</Link>
+        {user?.id == post.author.id && <Link to={`/posts/${post.slug}/edit`} className="p-3 border-1 border-teal-300 rounded-md hover:text-white hover:bg-teal-300">Edit</Link>}
+      </div>
     </div>
   )
 }

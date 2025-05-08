@@ -54,6 +54,20 @@ const router = createBrowserRouter([
 
           return { post };
         }
+      },
+      {
+        path: "/posts/:slug/edit",
+        lazy: {
+          Component: async () => (await import("./pages/PostEdit")).default
+        },
+        loader: async ({ params }) => {
+          const { slug } = params;
+          if (!slug) return;
+
+          const { post } = await PostService.getPost(slug);;
+
+          return { post };
+        }
       }
     ]
   }
