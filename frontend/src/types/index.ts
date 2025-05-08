@@ -14,6 +14,7 @@ export interface Post {
   created_at: Date;
   updated_at: Date;
   published_at: Date;
+  author: User;
 }
 
 export interface PaginationProps {
