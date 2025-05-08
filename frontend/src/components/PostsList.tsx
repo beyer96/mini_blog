@@ -1,7 +1,8 @@
-import type { PaginationProps, Post } from "../types";
+import { useAppSelector } from "../store";
 import Pagination from "./Pagination";
 
-export default function PostsList({ posts, paginationProps }: { posts: Post[], paginationProps: PaginationProps }) {
+export default function PostsList() {
+  const { posts, total, limit, page } = useAppSelector(store => store.posts);
   const showExcerpt = (postContent: string) => {
     return postContent.slice(0, 80) + "...";
   };
@@ -19,7 +20,7 @@ export default function PostsList({ posts, paginationProps }: { posts: Post[], p
           </div>
         ))
       }
-      <Pagination {...paginationProps} />
+      <Pagination limit={limit} total={total} page={page} />
     </>
   )
 }
