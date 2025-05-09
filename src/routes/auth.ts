@@ -5,11 +5,14 @@ import AppUser from "../database/entities/AppUser";
 import Redis from "ioredis";
 import AuthenticationError from "../errors/AuthenticationError";
 import authenticate from "../middlewares/authenticate";
-import AuthorizationError from "../errors/AuthorizationError";
 
 interface UserInfo {
+  id: number;
   username: string;
+  password_hash: string;
   email: string;
+  created_at: Date;
+  updated_at: Date;
 }
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
@@ -31,14 +34,14 @@ export const isRevoked = async (token: string) => {
   return await redis.get(token) == "revoked";
 }
 
-const generateAccessToken = (userInfo: UserInfo) => {
-  const accessToken = jwt.sign(userInfo, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION_IN_SECONDS });
+const generateAccessToken = (user: UserInfo) => {
+  const accessToken = jwt.sign({ user }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_TOKEN_EXPIRATION_IN_SECONDS });
 
   return accessToken;
 };
 
-const generateRefreshToken = (userInfo: UserInfo) => {
-  const refreshToken = jwt.sign(userInfo, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRATION_IN_SECONDS });
+const generateRefreshToken = (user: UserInfo) => {
+  const refreshToken = jwt.sign({ user }, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_TOKEN_EXPIRATION_IN_SECONDS });
 
   return refreshToken;
 };
@@ -49,8 +52,7 @@ authRouter.post("/auth/register", async (req, res) => {
   const newUser = AppUser.create({ username, email, password_hash: password });
 
   await newUser.save();
-  const userInfo: UserInfo = { username, email };
-
+  const { posts, ...userInfo } = newUser;
   const accessToken = generateAccessToken(userInfo);
   const refreshToken = generateRefreshToken(userInfo);
 
@@ -67,7 +69,7 @@ authRouter.post("/auth/login", async (req, res) => {
   const passwordCorrect = await bcrypt.compare(password, user.password_hash);
   if (!passwordCorrect) throw new AuthenticationError({ message: "Invalid credentials" });
 
-  const { password_hash, ...userInfo } = user;
+  const { posts, ...userInfo } = user;
   const accessToken = generateAccessToken(userInfo);
   const refreshToken = generateRefreshToken(userInfo);
 
@@ -84,15 +86,14 @@ authRouter.post("/auth/refresh", async (req, res) => {
   jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err: any, decoded: any) => {
     if (err) throw new AuthenticationError({ message: "Unable to refresh access token: Invalid refresh token!" });
 
-    const decodedUserInfo = { email: decoded.email, username: decoded.username };
-    const accessToken = generateAccessToken(decodedUserInfo);
-    const refreshToken = generateRefreshToken(decodedUserInfo);
+    const accessToken = generateAccessToken(decoded.user);
+    const refreshToken = generateRefreshToken(decoded.user);
 
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_OPTIONS);
 
     res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
 
-    res.status(200).send({ accessToken });
+    res.status(200).send({ user: decoded.user, accessToken });
   });
 });
 

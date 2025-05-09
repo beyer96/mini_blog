@@ -1,5 +1,5 @@
-import axiosInstance from "./axiosInstance";
 import type { User } from "../types";
+import { axiosInstance } from "./axiosInstance";
 
 interface LoginBody { username?: User["username"], password?: string };
 interface LoginResponse { user: User, accessToken: string };
@@ -14,7 +14,7 @@ interface RegisterBody {
 };
 
 
-export default class AuthService {
+export default class AuthService {  
   static login = async (data: LoginBody): Promise<LoginResponse> => {
     const response = await axiosInstance.post("/auth/login", data);
 

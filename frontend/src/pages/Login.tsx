@@ -1,7 +1,6 @@
 import { FormEvent } from "react";
 import { useNavigate } from "react-router";
-import { LOCAL_STORAGE_ACCESS_TOKEN_NAME } from "../utils";
-import { login } from "../store/userSlice";
+import { login } from "../store/authSlice";
 import { useAppDispatch } from "../store";
 import AuthService from "../services/authService";
 
@@ -16,8 +15,7 @@ export default function Login() {
       password: formData.get("password") as string
     });
 
-    localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_NAME, accessToken);
-    dispatch(login(user));
+    dispatch(login({ user, token: accessToken }));
     navigate("/");
   };
 

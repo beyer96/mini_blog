@@ -1,5 +1,5 @@
 import { Post } from "../types";
-import axiosInstance from "./axiosInstance";
+import { axiosInstance } from "./axiosInstance";
 
 interface GetPostsParams {
   limit?: number;

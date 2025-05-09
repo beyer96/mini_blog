@@ -1,10 +1,10 @@
 import { NavLink } from "react-router";
 import { useAppDispatch, useAppSelector } from "../store";
 import AuthService from "../services/authService";
-import { logout } from "../store/userSlice";
+import { logout } from "../store/authSlice";
 
 export default function Navigation() {
-  const { user } = useAppSelector(state => state.user);
+  const { user } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
     const response = await AuthService.logout();

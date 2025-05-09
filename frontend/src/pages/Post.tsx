@@ -4,7 +4,7 @@ import { useAppSelector } from "../store";
 
 export default function Post() {
   const { post }: { post: IPost } = useLoaderData();
-  const { user } = useAppSelector(store => store.user);
+  const { user } = useAppSelector(store => store.auth);
 
   return (
     <section className="relative mx-10">

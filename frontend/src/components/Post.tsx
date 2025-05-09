@@ -3,7 +3,7 @@ import { Post as IPost } from "../types";
 import { useAppSelector } from "../store";
 
 export default function Post({ post }: { post: IPost}) {
-  const { user } = useAppSelector(store => store.user);
+  const { user } = useAppSelector(store => store.auth);
   const excerpt = (postContent: string, length = 80) => {
     return postContent.slice(0, length) + "...";
   };

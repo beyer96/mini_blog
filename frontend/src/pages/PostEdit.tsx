@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default function PostEdit() {
   const navigate = useNavigate();
   const { post } = useLoaderData<{ post: Post }>();
-  const { user } = useAppSelector(store => store.user);
+  const { user } = useAppSelector(store => store.auth);
 
   useEffect(() => {
     if (post.author.id !== user?.id) navigate("/");
