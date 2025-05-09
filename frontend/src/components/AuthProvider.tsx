@@ -4,6 +4,7 @@ import { ReactNode, useLayoutEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { login, logout } from "../store/authSlice";
 import { axiosWithAuthInstance } from "../services/axiosInstance";
+import Loader from "./Loader";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
@@ -84,7 +85,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <>
-      {loading ? "Loading..." : children}
+      {loading ? <Loader /> : children}
     </>
   )
 }
