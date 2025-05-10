@@ -20,7 +20,7 @@ export async function paginate<T extends BaseEntity>(
   entity: typeof BaseEntity & { new(): T },
   limit: number | null,
   offset: number | null,
-  queryOptions?: FindManyOptions
+  queryOptions?: FindManyOptions<T>
 ): Promise<[T[], total: number, limit: number, page: number]> {
   const take = limit ?? 5;
   const skip = take * Math.max((offset ?? 0) - 1, 0);
