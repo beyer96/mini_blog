@@ -3,6 +3,7 @@ import Post from "../database/entities/Post";
 import authenticate from "../middlewares/authenticate";
 import NotFoundError from "../errors/NotFoundError";
 import { paginate } from "../utils";
+import { IsNull, Not } from "typeorm";
 
 const postsRouter = Router();
 
@@ -11,7 +12,7 @@ postsRouter.route("/posts")
     const { limit: limitParam, page: pageParam } = req.query;
     const limit = limitParam ? +limitParam : null;
     const page = pageParam ? +pageParam : null;
-    const [posts, postsCount, currentLimit, currentPage] = await paginate(Post, limit, page, { relations: ["author"] });
+    const [posts, postsCount, currentLimit, currentPage] = await paginate(Post, limit, page, { where: { published_at: Not(IsNull()) }, order: { published_at: "DESC" }, relations: ["author"] });
     if (!posts.length) throw new NotFoundError({ message: "No posts found." });
 
     res.status(200).send({ posts, total: postsCount, limit: currentLimit, page: currentPage });
