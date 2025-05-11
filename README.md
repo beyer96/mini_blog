@@ -1,6 +1,6 @@
 # Mini Blog
 
-Mini blog is just another small project to practice several technologies on both frontend and backend:
+Mini blog is just another small project to practice several technologies on both frontend and backend. Objectives of the project were generate by AI - see [instructions for the project here](INSTRUCTIONS.md):
 
 - Express.js
 - Postgres 
